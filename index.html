@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gravity Line Studio</title>
+<meta name="description" content="Gravity Line Studio is an independent game studio building Ialing: The New Frontier, a colony survival game for Android.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0B0A14;
+    --deep:#151228;
+    --haze:#241E3C;
+    --rolag:#AE4230;
+    --rolag-lit:#D9714F;
+    --pale:#E8EDF5;
+    --ice:#8FB2CE;
+    --dust:#C9B79C;
+    --muted:#8A85A3;
+    --line:rgba(232,237,245,.14);
+    --shell:min(1080px,100% - 3rem);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--void);
+    color:var(--pale);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    background-image:
+      radial-gradient(900px 520px at 78% -10%, rgba(174,66,48,.16), transparent 70%),
+      radial-gradient(700px 480px at 8% 4%, rgba(36,30,60,.9), transparent 70%);
+    background-repeat:no-repeat;
+  }
+
+  .shell{width:var(--shell);margin-inline:auto}
+
+  .label{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  /* ---- masthead ---- */
+  .masthead{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:1.5rem;flex-wrap:wrap;
+    padding-block:1.75rem;
+    border-bottom:1px solid var(--line);
+  }
+  .mark{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--pale);text-decoration:none;
+  }
+  .mark span{color:var(--rolag-lit)}
+  .masthead nav{display:flex;gap:1.5rem}
+  .masthead nav a{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;
+    padding-bottom:.15rem;border-bottom:1px solid transparent;
+  }
+  .masthead nav a:hover,.masthead nav a:focus-visible{color:var(--pale);border-bottom-color:var(--rolag)}
+
+  /* ---- hero ---- */
+  .hero{padding-block:4.5rem 3rem}
+  .hero h1{
+    font-family:Syne,sans-serif;
+    font-weight:800;
+    font-size:clamp(2.1rem,6.2vw,4.1rem);
+    line-height:1.02;
+    letter-spacing:-.02em;
+    margin:1.1rem 0 1.4rem;
+    max-width:16ch;
+  }
+  .hero h1 em{font-style:normal;color:var(--rolag-lit)}
+  .hero p{max-width:52ch;color:#BFC6D6;margin:0}
+  .hero p strong{color:var(--pale);font-weight:500}
+
+  /* ---- the gravity line (signature) ---- */
+  .orbit{
+    position:relative;
+    height:180px;
+    margin:3.5rem 0 1rem;
+  }
+  .orbit-rail{
+    position:absolute;left:0;right:0;top:50%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--line) 12%,rgba(232,237,245,.30) 55%,var(--line) 92%,transparent);
+    transform-origin:left center;
+    animation:rail 1100ms cubic-bezier(.22,.8,.3,1) both;
+  }
+  .moon{
+    position:absolute;top:50%;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    animation:settle 1500ms cubic-bezier(.2,.75,.25,1) both;
+  }
+  .moon.m1{left:6%;  width:7px; height:7px;  background:var(--ice);opacity:.5; animation-delay:180ms}
+  .moon.m2{left:17%; width:13px;height:13px; background:var(--pale);opacity:.7; animation-delay:280ms}
+  .moon.m3{left:27%; width:5px; height:5px;  background:var(--ice);opacity:.45;animation-delay:360ms}
+  .moon.m4{left:38%; width:19px;height:19px; background:var(--dust);opacity:.8; animation-delay:440ms}
+  .moon.m5{left:47%; width:8px; height:8px;  background:var(--ice);opacity:.55;animation-delay:520ms}
+  .moon.m7{left:79%; width:11px;height:11px; background:var(--pale);opacity:.65;animation-delay:700ms}
+  .moon.m8{left:88%; width:6px; height:6px;  background:var(--ice);opacity:.4; animation-delay:780ms}
+  .moon.m9{left:96%; width:15px;height:15px; background:var(--dust);opacity:.6; animation-delay:860ms}
+
+  .rolag{
+    left:63%;
+    width:clamp(66px,12vw,104px);
+    height:clamp(66px,12vw,104px);
+    background:
+      radial-gradient(circle at 34% 30%, var(--rolag-lit), var(--rolag) 52%, #5E2019 100%);
+    box-shadow:0 0 0 1px rgba(217,113,79,.35), 0 0 70px 8px rgba(174,66,48,.28);
+    animation-delay:600ms;
+  }
+  .rolag-tag{
+    position:absolute;left:63%;top:calc(50% + clamp(46px,7vw,66px));
+    transform:translateX(-50%);
+    white-space:nowrap;
+    color:var(--rolag-lit);
+    animation:fade 900ms 1250ms both;
+  }
+  .rolag-tag::before{content:"";display:block;width:1px;height:14px;margin:0 auto .5rem;background:rgba(217,113,79,.5)}
+
+  @keyframes rail{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @keyframes settle{
+    from{opacity:0;transform:translate(calc(-50% + 34px),-50%)}
+    to{opacity:inherit;transform:translate(-50%,-50%)}
+  }
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  /* ---- sections ---- */
+  .band{padding-block:3.5rem;border-top:1px solid var(--line)}
+  .band h2{
+    font-family:Syne,sans-serif;font-weight:600;
+    font-size:clamp(1.5rem,3.4vw,2.1rem);
+    letter-spacing:-.01em;margin:.9rem 0 1.1rem;
+  }
+  .band p{max-width:62ch;color:#BFC6D6;margin:0 0 1rem}
+  .band p:last-child{margin-bottom:0}
+
+  .specs{
+    list-style:none;margin:2rem 0 0;padding:0;
+    display:grid;gap:1px;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    background:var(--line);border:1px solid var(--line);
+  }
+  .specs li{background:var(--void);padding:1.1rem 1.2rem}
+  .specs .k{display:block;margin-bottom:.35rem}
+  .specs .v{font-family:"IBM Plex Mono",monospace;font-size:.95rem;color:var(--pale)}
+
+  .links{list-style:none;margin:1.6rem 0 0;padding:0}
+  .links li{border-top:1px solid var(--line)}
+  .links li:last-child{border-bottom:1px solid var(--line)}
+  .links a{
+    display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+    padding:1.05rem .2rem;
+    color:var(--pale);text-decoration:none;
+  }
+  .links a:hover,.links a:focus-visible{color:var(--rolag-lit)}
+  .links .arrow{font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:.85rem}
+  .links a:hover .arrow,.links a:focus-visible .arrow{color:var(--rolag-lit)}
+
+  footer{
+    padding-block:2.5rem 3.5rem;
+    border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  }
+
+  a:focus-visible,.mark:focus-visible{outline:2px solid var(--rolag-lit);outline-offset:3px}
+
+  @media (max-width:640px){
+    .orbit{height:150px;margin-top:2.5rem}
+    .hero{padding-block:3rem 2rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .orbit-rail,.moon,.rolag-tag{animation:none}
+    .moon{opacity:.65}
+    .rolag{opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<header class="shell masthead">
+  <a class="mark" href="index.html">Gravity Line <span>Studio</span></a>
+  <nav>
+    <a href="#game">Game</a>
+    <a href="#studio">Studio</a>
+    <a href="#legal">Legal</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="shell hero">
+    <p class="label">Independent game studio &nbsp;/&nbsp; Wyoming, USA</p>
+    <h1>Twenty-five moons. <em>None of them are on your side.</em></h1>
+    <p>Gravity Line Studio is a one-person game studio building <strong>Ialing: The New Frontier</strong>, a colony survival game for Android.</p>
+
+    <div class="orbit" aria-hidden="true">
+      <div class="orbit-rail"></div>
+      <div class="moon m1"></div>
+      <div class="moon m2"></div>
+      <div class="moon m3"></div>
+      <div class="moon m4"></div>
+      <div class="moon m5"></div>
+      <div class="moon rolag"></div>
+      <div class="moon m7"></div>
+      <div class="moon m8"></div>
+      <div class="moon m9"></div>
+      <p class="label rolag-tag">Rolag &nbsp;·&nbsp; dominant</p>
+    </div>
+  </section>
+
+  <section class="shell band" id="game">
+    <p class="label">The game</p>
+    <h2>Ialing: The New Frontier</h2>
+    <p>Humanity was driven off Earth and scattered across the stars in escape pods. One of them came down on Ialing — a habitable world already spoken for, ringed by twenty-five moons and watched over by the largest of them.</p>
+    <p>You land with forty survivors and a damaged ship AI. Everything after that is yours to rebuild: shelter, food, research, defense. Other pods came down elsewhere. Finding them, and deciding who to stand with, is how a colony becomes something larger.</p>
+    <ul class="specs">
+      <li><span class="label k">Platform</span><span class="v">Android</span></li>
+      <li><span class="label k">Status</span><span class="v">In development</span></li>
+      <li><span class="label k">Price</span><span class="v">Free — no purchases</span></li>
+      <li><span class="label k">Engine</span><span class="v">Unity</span></li>
+    </ul>
+  </section>
+
+  <section class="shell band" id="studio">
+    <p class="label">The studio</p>
+    <h2>One person, one world</h2>
+    <p>Gravity Line Studio LLC is an independent game studio registered in Wyoming. Everything here — design, code, art direction, and the writing — is made by a single developer, built and tested by hand on real hardware before anything ships.</p>
+    <p>The studio makes long games: worlds meant to be lived in over months rather than finished in an afternoon.</p>
+  </section>
+
+  <section class="shell band" id="legal">
+    <p class="label">Legal</p>
+    <h2>Policies</h2>
+    <p>These documents cover Ialing: The New Frontier and any other software published by Gravity Line Studio LLC.</p>
+    <ul class="links">
+      <li><a href="privacy.html">Privacy Policy <span class="arrow">→</span></a></li>
+      <li><a href="terms.html">Terms of Service <span class="arrow">→</span></a></li>
+    </ul>
+  </section>
+
+  <section class="shell band" id="contact">
+    <p class="label">Contact</p>
+    <h2>Get in touch</h2>
+    <p>Support requests, press enquiries, and privacy questions all reach the same inbox, and are answered by the person who made the game.</p>
+    <ul class="links">
+      <li><a href="mailto:gravitylinestudio@gmail.com">gravitylinestudio@gmail.com <span class="arrow">→</span></a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="shell">
+  <p class="label" style="margin:0">© 2026 Gravity Line Studio LLC</p>
+  <p class="label" style="margin:0">Ialing: The New Frontier</p>
+</footer>
+
+</body>
+</html>
